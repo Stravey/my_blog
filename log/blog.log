@@ -1,0 +1,6 @@
+2025-05-25T21:14:55.101+08:00  INFO 28596 --- [restartedMain] com.liu.blog.BlogApplication             : Starting BlogApplication using Java 21.0.2 with PID 28596 (E:\Code\Project\Blog\target\classes started by strive in E:\Code\Project\Blog)
+2025-05-25T21:14:55.102+08:00 DEBUG 28596 --- [restartedMain] com.liu.blog.BlogApplication             : Running with Spring Boot v3.5.0, Spring v6.2.7
+2025-05-25T21:14:55.102+08:00  INFO 28596 --- [restartedMain] com.liu.blog.BlogApplication             : No active profile set, falling back to 1 default profile: "default"
+2025-05-25T21:14:56.790+08:00  WARN 28596 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-25T21:14:56.954+08:00  WARN 28596 --- [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-25T21:14:57.100+08:00  INFO 28596 --- [restartedMain] com.liu.blog.BlogApplication             : Started BlogApplication in 2.357 seconds (process running for 2.893)
