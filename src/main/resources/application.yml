@@ -3,5 +3,7 @@ spring:
     mode: HTML
   profiles:
     active: dev
-
+  mvc:
+    favicon:
+          enabled: false
 

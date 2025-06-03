@@ -8,7 +8,7 @@
     <h1>错误</h1>
 
     <div>
-        <div th:utext="&lt;!--" th:remove="tag"></div>
+        <div th:utext="'&lt;!--'" th:remove="tag"></div>
         <div th:utext="'Failed Request URL : ' + ${url}" th:remove="tag"></div>
         <div th:utext="'Exception message : ' + ${exception.message}" th:remove="tag"></div>
         <ul th:remove="tag">
