@@ -8,6 +8,7 @@ public class indexController {
 
     @GetMapping("/")
     public String index() {
+        int i = 9 / 0;
         return "index";
     }
 
