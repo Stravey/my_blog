@@ -1,5 +1,6 @@
 package com.liu.blog.web;
 
+import com.liu.blog.NotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -8,13 +9,7 @@ public class indexController {
 
     @GetMapping("/")
     public String index() {
-        int i = 9 / 0;
         return "index";
-    }
-
-    @GetMapping("/blog")
-    public String blog() {
-        return "blog";
     }
 
 }
