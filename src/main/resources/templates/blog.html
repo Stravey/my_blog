@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
+<head th:replace="_fragments :: head(~{::title})">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.25">
-    <title>博客详情页</title>
+    <title>博客详情</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
-    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/css/typo.css}">
-    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
-    <link rel="stylesheet" href="../static/lib/prism/prism.css" th:href="@{/prism/prism.css}">
-    <link rel="stylesheet" href="../static/lib/tocbot/tocbot.css" th:href="@{/tocbot/tocbot.css}">
-    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="stylesheet" href="../static/css/typo.css">
+    <link rel="stylesheet" href="../static/css/animate.css">
+    <link rel="stylesheet" href="../static/lib/prism/prism.css">
+    <link rel="stylesheet" href="../static/lib/tocbot/tocbot.css">
+    <link rel="stylesheet" href="../static/css/me.css">
 </head>
 
 <body>
 
 <!--导航-->
-<nav class="ui inverted attached segment m-padded-tb-little m-shadow-small">
+<nav th:replace="_fragments :: menu(0)" class="ui inverted attached segment m-padded-tb-little m-shadow-small">
     <div class="ui container">
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui teal header item">Blog</h2>
@@ -644,7 +644,7 @@ h5,h6{font-size:1em;}
 <br>
 <br>
 <!--底部footer-->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui center aligned container">
         <div class="ui inverted divided stackable grid">
             <div class="three wide column">
@@ -683,7 +683,7 @@ h5,h6{font-size:1em;}
     </div>
 </footer>
 
-
+<!--/*/<th:block th:replace="_fragments :: script">/*/-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.3/jquery.scrollTo.min.js"></script>
@@ -691,6 +691,7 @@ h5,h6{font-size:1em;}
 <script src="../static/lib/tocbot/tocbot.min.js"></script>
 <script src="../static/lib/qrcode/qrcode.min.js"></script>
 <script src="../static/lib/waypoints/jquery.waypoints.min.js"></script>
+<!--/*/</th:block>/*/-->
 
 <script>
     $('.menu.toggle').click(function () {
