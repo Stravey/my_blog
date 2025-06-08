@@ -1,10 +1,10 @@
 package com.liu.blog.pojo;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "t_type")
@@ -14,6 +14,9 @@ public class Type {
     @GeneratedValue
     private Long id;
     private String name;
+
+    @OneToMany(mappedBy = "type")
+    private List<Blog> blogs = new ArrayList<>();
 
     public Type() {
     }
@@ -32,6 +35,14 @@ public class Type {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Blog> getBlogs() {
+        return blogs;
+    }
+
+    public void setBlogs(List<Blog> blogs) {
+        this.blogs = blogs;
     }
 
     @Override
