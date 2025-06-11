@@ -54,4 +54,9 @@ public class TypeServiceImpl implements TypeService {
                 .orElseThrow(() -> new NotFoundException("不存在Id"));
     }
 
+    @Transactional
+    @Override
+    public Type getTypeByName(String name) {
+        return typeRepository.findTypeByName(name);
+    }
 }
