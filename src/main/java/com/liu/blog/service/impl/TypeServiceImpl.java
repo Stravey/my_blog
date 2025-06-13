@@ -5,7 +5,7 @@ import com.liu.blog.dao.TypeRepository;
 import com.liu.blog.exception.NotFoundException;
 import com.liu.blog.pojo.Type;
 import com.liu.blog.service.TypeService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
