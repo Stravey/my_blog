@@ -117,7 +117,7 @@
                             <a onclick="page(this)" th:attr="data-page=${page.number} - 1" class="item" th:unless="${page.first}">上一页</a>
                             <a onclick="page(this)" th:attr="data-page=${page.number} + 1" class="item" th:unless="${page.last}">下一页</a>
                         </div>
-                        <a href="#" class="ui mini right floated teal basic button">新增</a>
+                        <a href="#" th:href="@{/admin/blogs/input}" class="ui mini right floated teal basic button">新增</a>
                     </th>
                 </tr>
                 </tfoot>
@@ -174,7 +174,7 @@
 </footer>
 
 
-<!--/*/<th:block th:replace="_fragments :: script">/*/-->
+<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
 <!--/*/</th:block>/*/-->
