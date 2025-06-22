@@ -1,63 +1,61 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="admin/_fragments :: head(~{::title})">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.25">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>分类管理</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.5.0/semantic.min.css">
     <link rel="stylesheet" href="../../static/css/me.css">
 </head>
-
 <body>
-
-<!--导航-->
-<nav th:replace="admin/_fragments :: menu(2)" class="ui inverted attached segment m-padded-tb-little m-shadow-small">
+<!-- 导航部分 -->
+<nav th:replace="admin/_fragments :: menu(2)" id="menu" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+    <a href="#" @click="showMenu" class="view-ui item m-right-top m-mobile-show">
+        <i style="color: #00B5AD" class="big sidebar icon"></i>
+    </a>
     <div class="ui container">
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui teal header item">管理后台</h2>
-            <!--手机端隐藏-->
-            <a href="#" class="m-item item m-mobile-hide"><i class="home icon"></i>博客</a>
+            <a href="#" class="active m-item item m-mobile-hide"><i class="home icon"></i>博客</a>
             <a href="#" class="m-item item m-mobile-hide"><i class="idea icon"></i>分类</a>
             <a href="#" class="m-item item m-mobile-hide"><i class="tags icon"></i>标签</a>
-            <div class="right m-item m-mobile-hide menu">
-                <div class="ui dropdown item">
+            <div class="right menu">
+                <div class="ui dropdown item m-item m-mobile-hide">
                     <div class="text">
-                        <img class="ui avatar image" src="../../static/images/me.jpg" alt="#">Strive
+                        <img class="ui avatar image" src="../../static/images/test.png" style="width: 30px">
+                        BloothOfYouth
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <a href="#" class="item">注销</a>#
+                        <a href="#" class="item">注销</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
-        <i class="sidebar icon"></i>
-    </a>
 </nav>
 
+<!-- 二级导航 -->
 <div class="ui attached pointing menu">
     <div class="ui container">
         <div class="right menu">
-            <a href="#" th:href="@{/admin/types/input}" class="item">新增</a>
-            <a href="#" th:href="@{/admin/types}" class="teal active item">列表</a>
+            <a href="/admin/types/input" class="item">新增</a>
+            <a href="#" class="teal active item">列表</a>
         </div>
     </div>
 </div>
 
-<!--中间内容-->
-<div class="m-container-small m-padded-tb-large">
+<!-- 中间内容部分 -->
+<div class="m-container-small m-padded-tb-big">
     <div class="ui container">
-
-        <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+        <!--suppress ThymeleafVariablesResolveInspection -->
+        <div class="ui success message" th:unless="${#strings.isEmpty(success)}">
             <i class="close icon"></i>
-            <i class="header">提示：</i>
-            <p th:text="${message}">恭喜，操作成功！</p>
+            <div class="header">提示：</div>
+            <!--suppress ThymeleafVariablesResolveInspection -->
+            <p th:text="${success}"></p>
         </div>
-
-        <table class="ui celled table">
+        <table id="type" class="ui unstackable teal table" v-cloak>
             <thead>
             <tr>
                 <th></th>
@@ -66,99 +64,143 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="type,iterStat : ${page.content}">
-                <td th:text="${iterStat.count}">1</td>
-                <td th:text="${type.name}">练习</td>
+            <tr v-for="(item,index) in types">
+                <td>{{index+1}}</td>
+                <td>{{item.typeName}}</td>
                 <td>
-                    <a href="#" th:href="@{/admin/types/{id}/input(id = ${type.id})}" class="ui mini teal basic button">编辑</a>
-                    <a href="#" th:href="@{/admin/types/{id}/delete(id = ${type.id})}" class="ui mini red basic button">删除</a>
+                    <a href="#" :href="'/admin/types/update/'+item.id"  class="ui mini teal basic button">编辑</a>
+                    <a href="#" @click="readyDeleteType(item.id,item.typeName)" class="ui mini red basic button m-margin-top-small">删除</a>
                 </td>
             </tr>
             </tbody>
             <tfoot>
             <tr>
                 <th colspan="6">
-                    <div class="ui mini pagination menu" th:if="${page.totalPages} > 1">
-                        <a th:href="@{/admin/types(page=${page.number - 1})}" class="item" th:unless="${page.first}">上一页</a>
-                        <a th:href="@{/admin/types(page=${page.number + 1})}" class="item" th:unless="${page.last}">下一页</a>
+                    <div class="ui mini floated pagination menu">
+                        <a @click="prePageClick" class="item" :class="{disabled:isFirstPage}">上一页</a>
+                        <a @click="nextPageClick" class="item" :class="{disabled:isLastPage}">下一页</a>
                     </div>
-                    <a href="#" th:href="@{/admin/types/input}" class="ui mini right floated teal basic button">新增</a>
+                    <a href="/admin/types/input" class="ui mini right floated teal basic button">新增</a>
                 </th>
             </tr>
             </tfoot>
         </table>
-
     </div>
-
 </div>
 
-<br>
-<br>
-
-<!--底部footer-->
+<!-- 底部footer部分 -->
 <footer th:replace="admin/_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui center aligned container">
         <div class="ui inverted divided stackable grid">
             <div class="three wide column">
                 <div class="ui inverted link list">
                     <div class="item">
-                        <img class="ui rounded image" src="../../static/images/me.jpg" alt="" style="width: 110px">
+                        <img src="../../static/images/wechat.jpg" class="ui rounded image" alt="" style="width: 110px">
                     </div>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">最新博客</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">最新博客</h4>
                 <div class="ui inverted link list">
-                    <a href="#" class="item">用户故事（user story）</a>
-                    <a href="#" class="item">用户故事（user story）</a>
-                    <a href="#" class="item">用户故事（user story）</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">联系我</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">联系我</h4>
                 <div class="ui inverted link list">
-                    <a href="#" class="item">Email:2205487298@qq.com</a>
-                    <a href="#" class="item">QQ:2205487298</a>
+                    <a href="#" class="item">Email: 1042488120@qq.com</a>
+                    <a href="#" class="item">QQ: 1042488120</a>
                 </div>
             </div>
             <div class="seven wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">简介</h4>
-                <p class="m-text-thin m-text-spaced m-opacity-mini">
-                    哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">BloothOfYouth</h4>
+                <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客，会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
             </div>
         </div>
-        <div class="ui inverted section divider">
-            <br>
-            <br>
-            <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright@2025-2030 Blog Designed By Rui</p>
-        </div>
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright &copy; 2020 Blog Designed by BloothOfYouth </p>
     </div>
 </footer>
 
-
-<!--/*/<th:block th:replace="_fragments :: script">/*/-->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
-<!--/*/</th:block>/*/-->
-
+<th:block th:replace="admin/_fragments :: script">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.5.0/semantic.min.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</th:block>
 <script>
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
+    var menu = new Vue({
+        el: "#menu",
+        methods: {
+            showMenu:function () {
+                $('.m-item').toggleClass('m-mobile-hide');
+            }
+        }
     })
-
-    $('.message.close')
-        .on('click',function () {
-            $(this)
-                .closest('.message')
-                .transition('fade')
-        });
-
+    var types = new Vue({
+        el: "#type",
+        data: {
+            types: [], //Types对象集合
+            pageNum: 1, //当前页
+            prePage: "", //前一页
+            nextPage: "", //下一页
+            isFirstPage: true, //是否为第一页
+            isLastPage: true, //是否为最后一页
+        },
+        methods: {
+            //得到types
+            getTypes: function () {
+                var that = this;
+                axios.get("/admin/types/"+this.pageNum)
+                    .then(function (response) {
+                        that.types = response.data.list;
+                        that.prePage = response.data.prePage;
+                        that.nextPage = response.data.nextPage;
+                        that.pageNum = response.data.pageNum;
+                        that.isFirstPage = response.data.isFirstPage;
+                        that.isLastPage = response.data.isLastPage;
+                    })
+            },
+            //上一页方法
+            prePageClick: function () {
+                this.pageNum = this.prePage;
+                if(this.isFirstPage){//判断是否为第一页
+                    return;
+                }
+                this.getTypes();
+            },
+            //下一页方法
+            nextPageClick: function () {
+                this.pageNum = this.nextPage;
+                if(this.isLastPage){//判断是否为最后一页
+                    return;
+                }
+                this.getTypes();
+            },
+            //删除再确认
+            readyDeleteType: function (id,typeName) {
+                var flag = confirm("确定要删除[" + typeName + "]吗?");
+                if(flag == true){
+                    window.location = "/admin/types/delete/"+id;
+                }
+            }
+        },
+        mounted: function () {
+            this.getTypes();
+        }
+    })
 </script>
-
+<script>
+    $('.ui.dropdown') .dropdown({
+        on : 'hover'
+    });
+    $('.message .close').on('click',function () {
+        $(this)
+            .closest('.message')
+            .transition('fade');
+    })
+</script>
 </body>
-
 </html>

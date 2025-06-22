@@ -1,6 +1,6 @@
 
 body {
-    background: url("../images/more-leaves.png");
+    background: url("../images/back.gif");
 }
 
 /*-----padded-------*/
@@ -99,6 +99,11 @@ body {
 .m-container {
     max-width: 72em !important;
     margin:auto !important;
+}
+
+.m-container-small_large {
+    max-width: 64em !important;
+    margin: auto !important;
 }
 
 .m-container-small {

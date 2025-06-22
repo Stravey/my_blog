@@ -1,226 +1,298 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="admin/_fragments :: head(~{::title})">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.25">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>博客管理</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.5.0/semantic.min.css">
     <link rel="stylesheet" href="../../static/css/me.css">
 </head>
-
 <body>
-
-<!--导航-->
-<nav th:replace="admin/_fragments :: menu(1)" class="ui inverted attached segment m-padded-tb-little m-shadow-small">
+<!-- 导航部分 -->
+<nav th:replace="admin/_fragments :: menu(1)" id="menu" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+    <a href="#" @click="showMenu" class="view-ui item m-right-top m-mobile-show">
+        <i style="color: #00B5AD" class="big sidebar icon"></i>
+    </a>
     <div class="ui container">
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui teal header item">管理后台</h2>
-            <!--手机端隐藏-->
-            <a href="#" class="m-item item m-mobile-hide"><i class="home icon"></i>博客</a>
+            <a href="#" class="active m-item item m-mobile-hide"><i class="home icon"></i>博客</a>
             <a href="#" class="m-item item m-mobile-hide"><i class="idea icon"></i>分类</a>
             <a href="#" class="m-item item m-mobile-hide"><i class="tags icon"></i>标签</a>
-            <div class="right m-item m-mobile-hide menu">
-                <div class="ui dropdown item">
+            <div class="right menu">
+                <div class="ui dropdown item m-item m-mobile-hide">
                     <div class="text">
-                        <img class="ui avatar image" src="../../static/images/me.jpg" alt="#">Strive
+                        <img class="ui avatar image" src="../../static/images/test.png" style="width: 30px">
+                        BloothOfYouth
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <a href="#" class="item">注销</a>#
+                        <a href="#" class="item">注销</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
-        <i class="sidebar icon"></i>
-    </a>
 </nav>
 
+<!-- 二级导航 -->
 <div class="ui attached pointing menu">
     <div class="ui container">
         <div class="right menu">
-            <a href="#" class="item">发布</a>
+            <a href="/admin/blogs/input" class="item">发布</a>
             <a href="#" class="teal active item">列表</a>
         </div>
     </div>
 </div>
 
-<br>
-<br>
-
-<!--中间内容-->
-<div class="m-container-small m-padded-tb-large">
-    <div class="ui container">
-        <div class="ui secondary segment form">
-            <input type="hidden" name="page">
-            <div class="inline fields">
+<!-- 中间内容部分 -->
+<div class="m-container-small m-padded-tb-big">
+    <div id="blog" class="ui container" @submit.prevent="submitForm">
+        <form id="blogs_form" class="ui segment form m-padded-bottom-small" method="post">
+            <input hidden v-model="pageNum">
+            <div class="two inline fields">
                 <div class="field">
-                    <input type="text" name="title" placeholder="标题">
+                    <div class="ui fluid">
+                        <input type="text" name="title" placeholder="标题" v-model="title">
+                    </div>
                 </div>
                 <div class="field">
-                    <div class="ui selection dropdown">
-                        <input type="hidden" name="type">
+                    <div class="ui fluid selection dropdown">
+                        <input type="hidden" name="typeId">
                         <i class="dropdown icon"></i>
                         <div class="default text">分类</div>
                         <div class="menu">
-                            <div th:each="type : ${types}" class="item" th:data-value="${type.id}" th:text="${type.name}">错误日志</div>
-                            <div class="item" data-value="1">开发者手册</div>
-                            <div class="item" data-value="1">日常生活</div>
+                            <div class="item" data-value="-1">【无，不做分类查询】</div>
+                            <div v-for="item in types" class="item" :data-value="item.id">{{item.typeName}}</div>
                         </div>
                     </div>
                 </div>
                 <div class="field">
-                    <div class="ui checkbox">
-                        <input type="checkbox" id="recommend" name="recommend">
+                    <div id="recommend_field" class="ui checkbox" data-content="没按之前，推荐和非推荐都可以查出来">
+                        <input type="checkbox" id="recommend" name="recommend" v-model="recommend">
                         <label for="recommend">推荐</label>
                     </div>
+                    <div class="ui buttons">
+                        <button class="ui tiny teal basic submit button">搜索</button>
+                        <div class="or" data-text="或"></div>
+                        <button @click="searchAll" class="ui tiny positive basic button">查询所有</button>
+                    </div>
+                    <!--<button type="submit" class="ui tiny teal basic button m-margin-l-big"><i class="search icon"></i>搜索</button>-->
                 </div>
-                <div class="field">
-                    <button type="button" id="search-button" class="ui teal basic button"><i class="search icon"></i>搜索</button>
-                </div>
-
             </div>
+        </form>
+
+        <table class="ui unstackable teal table" v-cloak>
+            <thead>
+            <tr>
+                <th></th>
+                <th>标题</th>
+                <th>类型</th>
+                <th>推荐</th>
+                <th>状态</th>
+                <th>更新时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item,index) in blogs">
+                <td>{{index+1}}</td>
+                <td>{{item.title}}</td>
+                <td>{{item.type.typeName}}</td>
+
+                <td v-show="item.recommend">是</td>
+                <td v-show="!item.recommend">否</td>
+
+                <td v-show="item.published">发布</td>
+                <td v-show="!item.published">草稿</td>
+
+                <td>{{item.updateTime}}</td>
+                <td>
+                    <a href="#" :href="'/admin/blogs/update/'+item.id" class="ui mini teal basic button">编辑</a>
+                    <a href="#" @click="readyDeleteBlog(item.id,item.title)" class="ui mini red basic button m-margin-top-small">删除</a>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="7">
+                    <div class="ui mini floated pagination menu">
+                        <a @click="prePageClick" class="item" :class="{disabled:isFirstPage}">上一页</a>
+                        <a @click="nextPageClick" class="item" :class="{disabled:isLastPage}">下一页</a>
+                    </div>
+                    <a href="/admin/blogs/input" class="ui mini right floated teal basic button">新增</a>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+
+        <!-- 添加成功 -->
+        <!--suppress ThymeleafVariablesResolveInspection -->
+        <div class="ui success message" th:unless="${#strings.isEmpty(success)}">
+            <i class="close icon"></i>
+            <div class="header">提示：</div>
+            <!--suppress ThymeleafVariablesResolveInspection -->
+            <p th:text="${success}"></p>
         </div>
 
-
-        <div id="table-container">
-            <table th:fragment="blogList" class="ui compact teal table">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>标题</th>
-                    <th>类型</th>
-                    <th>推荐</th>
-                    <th>更新时间</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="blog,iterStat : ${page.content}">
-                    <td th:text="${iterStat.count}">1</td>
-                    <td th:text="${blog.title}">练习</td>
-                    <td th:text="${blog.type.name}">练习</td>
-                    <td th:text="${blog.recommend} ? '是' : '否'">是</td>
-                    <td th:text="${blog.updateTime}">2025-05-12 21:33:25</td>
-                    <td>
-                        <a href="#" th:href="@{/admin/blogs/{id}/input(id = ${blog.id})}" class="ui mini teal basic button">编辑</a>
-                        <a href="#" th:href="@{/admin/blogs/{id}/delete(id = ${blog.id})}" class="ui mini red basic button">删除</a>
-                    </td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr>
-                    <th colspan="6">
-                        <div class="ui mini pagination menu" th:if="${page.totalPages} > 1">
-                            <a onclick="page(this)" th:attr="data-page=${page.number} - 1" class="item" th:unless="${page.first}">上一页</a>
-                            <a onclick="page(this)" th:attr="data-page=${page.number} + 1" class="item" th:unless="${page.last}">下一页</a>
-                        </div>
-                        <a href="#" th:href="@{/admin/blogs/input}" class="ui mini right floated teal basic button">新增</a>
-                    </th>
-                </tr>
-                </tfoot>
-            </table>
-
-            <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
-                <i class="close icon"></i>
-                <div class="header">提示：</div>
-                <p th:text="${message}">恭喜，操作成功！</p>
-            </div>
-
+        <!-- 添加失败 -->
+        <!--suppress ThymeleafVariablesResolveInspection -->
+        <div class="ui negative message" th:unless="${#strings.isEmpty(error)}">
+            <i class="close icon"></i>
+            <div class="header">提示：</div>
+            <!--suppress ThymeleafVariablesResolveInspection -->
+            <p th:text="${error}"></p>
         </div>
-
     </div>
-
 </div>
 
-<br>
-<br>
-<br>
-<br>
-
-<!--底部footer-->
+<!-- 底部footer部分 -->
 <footer th:replace="admin/_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui center aligned container">
         <div class="ui inverted divided stackable grid">
             <div class="three wide column">
                 <div class="ui inverted link list">
                     <div class="item">
-                        <img class="ui rounded image" src="../../static/images/me.jpg" alt="" style="width: 110px">
+                        <img src="../../static/images/wechat.jpg" class="ui rounded image" alt="" style="width: 110px">
                     </div>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">最新博客</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">最新博客</h4>
                 <div class="ui inverted link list">
-                    <a href="#" class="item">用户故事（user story）</a>
-                    <a href="#" class="item">用户故事（user story）</a>
-                    <a href="#" class="item">用户故事（user story）</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">联系我</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">联系我</h4>
                 <div class="ui inverted link list">
-                    <a href="#" class="item">Email:2205487298@qq.com</a>
-                    <a href="#" class="item">QQ:2205487298</a>
+                    <a href="#" class="item">Email: 1042488120@qq.com</a>
+                    <a href="#" class="item">QQ: 1042488120</a>
                 </div>
             </div>
             <div class="seven wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">简介</h4>
-                <p class="m-text-thin m-text-spaced m-opacity-mini">
-                    哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">BloothOfYouth</h4>
+                <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客，会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
             </div>
         </div>
-        <div class="ui inverted section divider">
-            <br>
-            <br>
-            <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright@2025-2030 Blog Designed By Rui</p>
-        </div>
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright &copy; 2020 Blog Designed by BloothOfYouth </p>
     </div>
 </footer>
 
-
-<!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
-<!--/*/</th:block>/*/-->
-
+<th:block th:replace="admin/_fragments :: script">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.5.0/semantic.min.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</th:block>
 <script>
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
+    var menu = new Vue({
+        el: "#menu",
+        methods: {
+            showMenu:function () {
+                $('.m-item').toggleClass('m-mobile-hide');
+            }
+        }
     });
-
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
+    var blogs = new Vue({
+        el: "#blog",
+        data: {
+            blogs: [], //Blogs对象集合
+            types: [], //Types对象集合
+            pageNum: 1, //当前页 也是表单提交的pageNum
+            prePage: "", //前一页
+            nextPage: "", //下一页
+            isFirstPage: true, //是否为第一页
+            isLastPage: true, //是否为最后一页
+            title: "", //表单提交的title
+            recommend: null, //表单复选框的值
+        },
+        methods: {
+            //得到blogs
+            getBlogs: function () {
+                var data = Qs.stringify({pageNum:this.pageNum,title:this.title,typeId:$("[name='typeId']").val(),recommend:this.recommend});
+                var that = this;
+                axios.post("/admin/blogs",data)
+                    .then(function (response) {
+                        that.blogs = response.data.list;
+                        that.prePage = response.data.prePage;
+                        that.nextPage = response.data.nextPage;
+                        that.pageNum = response.data.pageNum;
+                        that.isFirstPage = response.data.isFirstPage;
+                        that.isLastPage = response.data.isLastPage;
+                    })
+            },
+            //得到types
+            getTypes: function (){
+                var that = this;
+                axios.get("/admin/blogs-types")
+                    .then(function (response) {
+                        that.types = response.data;
+                    })
+            },
+            //上一页方法
+            prePageClick: function () {
+                this.pageNum = this.prePage;
+                if(this.isFirstPage){//判断是否为第一页
+                    return;
+                }
+                this.getBlogs();
+            },
+            //下一页方法
+            nextPageClick: function () {
+                this.pageNum = this.nextPage;
+                if(this.isLastPage){//判断是否为最后一页
+                    return;
+                }
+                this.getBlogs();
+            },
+            //删除再确认
+            readyDeleteBlog: function (id,title) {
+                var flag = confirm("确定要删除[" + title + "]吗?");
+                if(flag == true){
+                    window.location = "/admin/blogs/delete/"+id;
+                }
+            },
+            submitForm: function () {
+                var that = this;
+                var data = Qs.stringify({pageNum:1,title:this.title,typeId:$("[name='typeId']").val(),recommend:this.recommend});
+                axios.post("/admin/blogs",data)
+                    .then(function (response) {
+                        that.blogs = response.data.list;
+                        that.prePage = response.data.prePage;
+                        that.nextPage = response.data.nextPage;
+                        that.pageNum = response.data.pageNum;
+                        that.isFirstPage = response.data.isFirstPage;
+                        that.isLastPage = response.data.isLastPage;
+                    })
+                return false;
+            },
+            searchAll: function () {
+                $('#blogs_form').submit(function () {
+                    return false;
+                });
+                window.location = "/admin/blogs";
+            }
+        },
+        mounted: function () {
+            this.getBlogs();
+            this.getTypes();
+        }
     })
-
-    $('.message.close')
-        .on('click',function () {
-            $(this)
-                .closest('.message')
-                .transition('fade');
-        });
-
-    function page(obj) {
-        $("[name='page']").val($(obj).data("page"));
-        loadData();
-    }
-
-    $("#search-button").click(function () {
-        loadData();
-    });
-    function loadData() {
-        $("#table-container").load(/*/[[@{/admin/blogs/search}]]*/"/admin/blogs/search",{
-            title : $("[name='title']").val(),
-            typeId : $("[name='typeId']").val(),
-            recommend : $("[name='recommend']").prop('checked'),
-            page : $("[name='page']").val()
-        });
-    }
-
 </script>
-
+<script>
+    $('.ui.dropdown') .dropdown({
+        on : 'hover'
+    });
+    $('.message .close').on('click',function () {
+        $(this)
+            .closest('.message')
+            .transition('fade');
+    });
+    $('#recommend_field').popup();
+</script>
 </body>
-
 </html>

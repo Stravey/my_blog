@@ -1,347 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.25">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>分类</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.5.0/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css">
 </head>
-
 <body>
-
-<!--导航-->
-<nav class="ui inverted attached segment m-padded-tb-little m-shadow-small">
+<!-- 导航部分 -->
+<nav th:replace="_fragments :: menu(2)" id="menu" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+    <a href="#" @click="showMenu" class="view-ui item m-right-top m-mobile-show">
+        <i style="color: #00B5AD" class="big sidebar icon"></i>
+    </a>
     <div class="ui container">
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui teal header item">Blog</h2>
-            <!--手机端隐藏-->
             <a href="#" class="m-item item m-mobile-hide"><i class="home icon"></i>首页</a>
             <a href="#" class="active m-item item m-mobile-hide"><i class="idea icon"></i>分类</a>
             <a href="#" class="m-item item m-mobile-hide"><i class="tags icon"></i>标签</a>
             <a href="#" class="m-item item m-mobile-hide"><i class="clone icon"></i>归档</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="info icon"></i>关于</a>
-            <div class="right item">
-                <div class="ui icon inverted transparent input">
+            <a href="#" class="m-item item m-mobile-hide"><i class="info icon"></i>关于我</a>
+            <div class="right m-item item m-mobile-hide">
+                <div class="ui icon input">
                     <input type="text" placeholder="Search...">
                     <i class="search link icon"></i>
                 </div>
             </div>
         </div>
     </div>
-
-    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
-        <i class="sidebar icon"></i>
-    </a>
-
 </nav>
 
-<!--中间内容-->
-<div class="m-container-small m-padded-tb-large">
+<!-- 中间内容部分 -->
+<div class="m-container-small m-padded-tb-big">
     <div class="ui container">
-        <!--header-->
+        <!-- header -->
         <div class="ui top attached segment">
-            <div class="ui middle aligned two column grid">
+            <div class="ui middle two column grid">
                 <div class="column">
                     <h3 class="ui teal header">分类</h3>
                 </div>
                 <div class="right aligned column">
-                    共 <h2 class="ui orange header m-inline-block m-text-thin">14</h2>个
+                    共 <h3 class="ui orange header m-inline-block" th:text="${#arrays.length(types)}">14</h3> 个
                 </div>
             </div>
         </div>
-
+        <!-- 分类区域 -->
         <div class="ui attached segment m-padded-tb-large">
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic teal button">思考与感悟</a>
-                <div class="ui basic teal left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic button">黄子韬</a>
-                <div class="ui basic left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic button">袁弘</a>
-                <div class="ui basic left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic button">刘劲</a>
-                <div class="ui basic left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic button">李冰冰</a>
-                <div class="ui basic left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic button">江疏影</a>
-                <div class="ui basic left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic button">王宝强</a>
-                <div class="ui basic left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic button">李晨</a>
-                <div class="ui basic left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic button">邓超</a>
-                <div class="ui basic left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic button">陈赫</a>
-                <div class="ui basic left pointing label">24</div>
+            <div class="ui labeled button m-margin-tb-tiny" th:each="type : ${types}">
+                <a href="#" th:href="@{'/types/'+${type.id}+'/1'}" class="ui basic button" th:classappend="${type.id==typeId} ? 'teal'" th:text="${type.typeName}">Java</a>
+                <div class="ui basic left pointing label" th:classappend="${type.id==typeId} ? 'teal'" th:text="${#arrays.length(type.blogs)}">16</div>
             </div>
         </div>
 
-        <div class="ui top attached teal segment">
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-                    <div class="eleven wide column">
-                        <h3 class="ui header">哈哈哈哈哈哈</h3>
-                        <p class="m-text">你捡起一片枫叶，写下我的名字，说要把我刻在时光里。我看着你专注的模样，心中满是感动。在这个飘零的季节，我们的爱情却如枫叶般炽热。</p>
-                        <div class="ui stackable grid">
-                            <div class="eleven wide column">
-                                <div class="ui horizontal link list">
-                                    <div class="item">
-                                        <img src="https://picsum.photos/seed/picsum/100/100" alt="" class="ui avatar image">
-                                        <div class="content">
-                                            <a href="#" class="header">Rui</a>
+        <!-- 博客列表 -->
+        <div class="ui attached teal segment animated fadeIn">
+            <div class="ui attached segment">
+                <div class="ui padded vertical segment m-padded-tb-large" th:each="blog : ${pageInfo.list}">
+                    <div class="ui mobile reversed stackable grid">
+                        <div class="ui eleven wide column">
+                            <h3 class="ui header">
+                                <a href="#" th:href="@{'/blog/'+${blog.id}}" target="_blank" class="m-black" th:text="${blog.title}">你真的理解什么是财富自由吗?</a>
+                            </h3>
+                            <p class="m-text" th:text="|${blog.description}......|">
+                                正确做好任何意见事情的前提是清晰，正确的理解目标，而事实是，我们很多人很多时候根本没有对目标
+                                正确的定义，甚至根本从来就没有想过，只是大家都那么做而已......
+                            </p>
+                            <div class="ui stackable grid">
+                                <div class="eleven wide column">
+                                    <div class="ui tiny horizontal link list">
+                                        <div class="item">
+                                            <img src="../static/images/test.png" alt="" class="ui avatar image" th:src="@{${blog.user.avatar}}">
+                                            <div class="content"><a href="#" th:href="@{/about}" target="_blank" class="header" th:text="${blog.user.nickname}">BloothOfYouth</a></div>
+                                        </div>
+                                        <div class="item">
+                                            <i class="calendar icon"></i> [[${#dates.format(blog.createTime,'yyyy-MM-dd')}]]
+                                        </div>
+                                        <div class="item">
+                                            <i class="eye icon"></i> [[${blog.views}]]
                                         </div>
                                     </div>
-                                    <div class="item">
-                                        <i class="calendar icon"></i> 2025-5-7
-                                    </div>
-                                    <div class="item">
-                                        <i class="eye icon"></i> 2100
-                                    </div>
+                                </div>
+                                <div class="right aligned five wide column">
+                                    <a href="#" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.type.typeName}">认知升级</a>
                                 </div>
                             </div>
-
-                            <div class="right aligned five wide column">
-                                <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
-                            </div>
                         </div>
-                    </div>
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/237/800/450" alt ="" class="ui rounded image">
-                        </a>
+                        <div class="five wide column">
+                            <a href="#" th:href="@{'/blog/'+${blog.id}}" target="_blank">
+                                <img src="../static/images/test.png" class="ui rounded image" th:src="@{${blog.firstPicture}}">
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-                    <div class="eleven wide column">
-                        <h3 class="ui header">哈哈哈哈哈哈</h3>
-                        <p class="m-text">你捡起一片枫叶，写下我的名字，说要把我刻在时光里。我看着你专注的模样，心中满是感动。在这个飘零的季节，我们的爱情却如枫叶般炽热。</p>
-                        <div class="ui stackable grid">
-                            <div class="eleven wide column">
-                                <div class="ui horizontal link list">
-                                    <div class="item">
-                                        <img src="https://picsum.photos/seed/picsum/100/100" alt="" class="ui avatar image">
-                                        <div class="content">
-                                            <a href="#" class="header">Rui</a>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <i class="calendar icon"></i> 2025-5-7
-                                    </div>
-                                    <div class="item">
-                                        <i class="eye icon"></i> 2100
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="right aligned five wide column">
-                                <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
-                            </div>
-                        </div>
+            <div class="ui bottom attached segment">
+                <div class="ui middle two column grid">
+                    <div class="column">
+                        <a th:href="@{'/types/'+${typeId}+'/'+${pageInfo.prePage}}" class="ui mini teal basic button" th:unless="${pageInfo.isFirstPage}">上一页</a>
                     </div>
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/237/800/450" alt ="" class="ui rounded image">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-                    <div class="eleven wide column">
-                        <h3 class="ui header">哈哈哈哈哈哈</h3>
-                        <p class="m-text">你捡起一片枫叶，写下我的名字，说要把我刻在时光里。我看着你专注的模样，心中满是感动。在这个飘零的季节，我们的爱情却如枫叶般炽热。</p>
-                        <div class="ui stackable grid">
-                            <div class="eleven wide column">
-                                <div class="ui horizontal link list">
-                                    <div class="item">
-                                        <img src="https://picsum.photos/seed/picsum/100/100" alt="" class="ui avatar image">
-                                        <div class="content">
-                                            <a href="#" class="header">Rui</a>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <i class="calendar icon"></i> 2025-5-7
-                                    </div>
-                                    <div class="item">
-                                        <i class="eye icon"></i> 2100
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="right aligned five wide column">
-                                <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/237/800/450" alt ="" class="ui rounded image">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-                    <div class="eleven wide column">
-                        <h3 class="ui header">哈哈哈哈哈哈</h3>
-                        <p class="m-text">你捡起一片枫叶，写下我的名字，说要把我刻在时光里。我看着你专注的模样，心中满是感动。在这个飘零的季节，我们的爱情却如枫叶般炽热。</p>
-                        <div class="ui stackable grid">
-                            <div class="eleven wide column">
-                                <div class="ui horizontal link list">
-                                    <div class="item">
-                                        <img src="https://picsum.photos/seed/picsum/100/100" alt="" class="ui avatar image">
-                                        <div class="content">
-                                            <a href="#" class="header">Rui</a>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <i class="calendar icon"></i> 2025-5-7
-                                    </div>
-                                    <div class="item">
-                                        <i class="eye icon"></i> 2100
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="right aligned five wide column">
-                                <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/237/800/450" alt ="" class="ui rounded image">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-                <div class="ui mobile reversed stackable grid">
-                    <div class="eleven wide column">
-                        <h3 class="ui header">哈哈哈哈哈哈</h3>
-                        <p class="m-text">你捡起一片枫叶，写下我的名字，说要把我刻在时光里。我看着你专注的模样，心中满是感动。在这个飘零的季节，我们的爱情却如枫叶般炽热。</p>
-                        <div class="ui stackable grid">
-                            <div class="eleven wide column">
-                                <div class="ui horizontal link list">
-                                    <div class="item">
-                                        <img src="https://picsum.photos/seed/picsum/100/100" alt="" class="ui avatar image">
-                                        <div class="content">
-                                            <a href="#" class="header">Rui</a>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <i class="calendar icon"></i> 2025-5-7
-                                    </div>
-                                    <div class="item">
-                                        <i class="eye icon"></i> 2100
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="right aligned five wide column">
-                                <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img src="https://picsum.photos/id/237/800/450" alt ="" class="ui rounded image">
-                        </a>
+                    <div class="right aligned column">
+                        <a th:href="@{'/types/'+${typeId}+'/'+${pageInfo.nextPage}}" class="ui mini teal basic button" th:unless="${pageInfo.isLastPage}">下一页</a>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- footer -->
-        <div class="ui bottom attached segment">
-            <div class="ui middle aligned two column grid">
-                <div class="column">
-                    <a href="#" class="ui teal basic button">上一页</a>
-                </div>
-                <div class="right aligned column">
-                    <a href="#" class="ui teal basic button">下一页</a>
-                </div>
-            </div>
-        </div>
-
     </div>
-
 </div>
 
-<br>
-<br>
-
-<!--底部footer-->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
+<!-- 底部footer部分 -->
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui center aligned container">
         <div class="ui inverted divided stackable grid">
             <div class="three wide column">
                 <div class="ui inverted link list">
                     <div class="item">
-                        <img class="ui rounded image" src="../static/images/me.jpg" alt="" style="width: 110px">
+                        <img src="../static/images/wechat.jpg" class="ui rounded image" alt="" style="width: 110px">
                     </div>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">最新博客</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">最新博客</h4>
                 <div class="ui inverted link list">
-                    <a href="#" class="item">用户故事（user story）</a>
-                    <a href="#" class="item">用户故事（user story）</a>
-                    <a href="#" class="item">用户故事（user story）</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">联系我</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">联系我</h4>
                 <div class="ui inverted link list">
-                    <a href="#" class="item">Email:2205487298@qq.com</a>
-                    <a href="#" class="item">QQ:2205487298</a>
+                    <a href="#" class="item">Email: 1042488120@qq.com</a>
+                    <a href="#" class="item">QQ: 1042488120</a>
                 </div>
             </div>
             <div class="seven wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">简介</h4>
-                <p class="m-text-thin m-text-spaced m-opacity-mini">
-                    哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">BloothOfYouth</h4>
+                <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客，会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
             </div>
         </div>
-        <div class="ui inverted section divider">
-            <br>
-            <br>
-            <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright@2025-2030 Blog Designed By Rui</p>
-        </div>
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright &copy; 2020 Blog Designed by BloothOfYouth </p>
     </div>
 </footer>
 
-
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+<th:block th:replace="_fragments :: script">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.5.0/semantic.min.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</th:block>
 
 <script>
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-
+    var menu = new Vue({
+        el: "#menu",
+        methods: {
+            showMenu:function () {
+                $('.m-item').toggleClass('m-mobile-hide');
+            }
+        }
+    })
 </script>
 
-</body>
+<script>
 
+</script>
+</body>
 </html>

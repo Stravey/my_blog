@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="admin/_fragments :: head(~{::title})">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.25">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>博客管理</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.5.0/semantic.min.css">
     <link rel="stylesheet" href="../../static/css/me.css">
 </head>
-
 <body>
-
-<!--导航-->
-<nav th:replace="admin/_fragments :: menu(0)" class="ui inverted attached segment m-padded-tb-little m-shadow-small">
+<!-- 导航部分 -->
+<nav th:replace="admin/_fragments :: menu(0)" id="menu" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+    <a href="#" @click="showMenu" class="view-ui item m-right-top m-mobile-show">
+        <i style="color: #00B5AD" class="big sidebar icon"></i>
+    </a>
     <div class="ui container">
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui teal header item">管理后台</h2>
-            <!--手机端隐藏-->
             <a href="#" class="m-item item m-mobile-hide"><i class="home icon"></i>博客</a>
             <a href="#" class="m-item item m-mobile-hide"><i class="idea icon"></i>分类</a>
             <a href="#" class="m-item item m-mobile-hide"><i class="tags icon"></i>标签</a>
-            <div class="right m-item m-mobile-hide menu">
-                <div class="ui dropdown item">
+            <div class="right menu">
+                <div class="ui dropdown item m-item m-mobile-hide">
                     <div class="text">
-                        <img class="ui avatar image" src="../../static/images/me.jpg">Strive
+                        <img class="ui avatar image" src="../../static/images/test.png" style="width: 30px">
+                        BloothOfYouth
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
@@ -32,87 +33,81 @@
             </div>
         </div>
     </div>
-
-    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
-        <i class="sidebar icon"></i>
-    </a>
 </nav>
 
+<br>
+<br>
+<br>
 
-<!--中间内容-->
-<div class="m-container-small m-padded-tb-large">
+<!-- 中间内容部分 -->
+<div class="m-container-small m-padded-tb-big">
     <div class="ui container">
         <div class="ui success large message">
-            <h3>Hi,</h3>
-            <p>欢迎登陆</p>
+            <h2>Hi,</h2>
+            <p>[[${session.user.nickname}]],欢迎登录！</p>
         </div>
 
-        <img src="https://picsum.photos/id/100/800/400" alt="" class="ui rounded bordered fluid image">
-
+        <img src="/images/admin_index.jpg" class="ui rounded bordered fluid image">
     </div>
-
 </div>
 
-<br>
-<br>
-
-<!--底部footer-->
+<!-- 底部footer部分 -->
 <footer th:replace="admin/_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui center aligned container">
         <div class="ui inverted divided stackable grid">
             <div class="three wide column">
                 <div class="ui inverted link list">
                     <div class="item">
-                        <img class="ui rounded image" src="../../static/images/me.jpg" alt="" style="width: 110px">
+                        <img src="../../static/images/wechat.jpg" class="ui rounded image" alt="" style="width: 110px">
                     </div>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">最新博客</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">最新博客</h4>
                 <div class="ui inverted link list">
-                    <a href="#" class="item">用户故事（user story）</a>
-                    <a href="#" class="item">用户故事（user story）</a>
-                    <a href="#" class="item">用户故事（user story）</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
+                    <a href="#" class="item">用户故事 (User Story)</a>
                 </div>
             </div>
             <div class="three wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">联系我</h4>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">联系我</h4>
                 <div class="ui inverted link list">
-                    <a href="#" class="item">Email:2205487298@qq.com</a>
-                    <a href="#" class="item">QQ:2205487298</a>
+                    <a href="#" class="item">Email: 1042488120@qq.com</a>
+                    <a href="#" class="item">QQ: 1042488120</a>
                 </div>
             </div>
             <div class="seven wide column">
-                <h4 class="ui inverted header m-text-thin m-text-spaced m-opacity-mini">简介</h4>
-                <p class="m-text-thin m-text-spaced m-opacity-mini">
-                    哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
+                <h4 class="ui inverted header m-text-thin m-text-spaced">BloothOfYouth</h4>
+                <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客，会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
             </div>
         </div>
-        <div class="ui inverted section divider">
-            <br>
-            <br>
-            <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright@2025-2030 Blog Designed By Rui</p>
-        </div>
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright &copy; 2020 Blog Designed by BloothOfYouth </p>
     </div>
 </footer>
 
-
-<!--/*/<th:block th:replace="_fragments :: script">/*/-->
+<th:block th:replace="admin/_fragments :: script">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
-<!--/*/</th:block>/*/-->
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.5.0/semantic.min.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</th:block>
 
 <script>
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
+    var menu = new Vue({
+        el: "#menu",
+        methods: {
+            showMenu:function () {
+                $('.m-item').toggleClass('m-mobile-hide');
+            }
+        }
     })
-
 </script>
-
+<script>
+    $('.ui.dropdown') .dropdown({
+        on : 'hover'
+    });
+</script>
 </body>
-
 </html>
