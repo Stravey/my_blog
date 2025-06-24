@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liu.blog.dao.BlogDao">
+
+    <insert id="addOneBlog" useGeneratedKeys="true" keyProperty="id">
+        insert into t_blog
+        values (null,#{title},#{content},#{fisrtPicture},
+               #{flag},#{views},#{appreciation},
+               #{shareStatement},#{commentable},#{published},
+               #{recommend},#{createTime},#{updateTime},#{type.id},#{user.id}
+               #{description})
+    </insert>
+
+    <insert id="addBlog_Tags" parameterType="com.liu.blog.entity.Blog">
+        insert into t_tag_blog values
+                                   <foreach collection="tags" item="tag" open="(" close=")" separator="),(">
+                                       #{tag.id},#{id}
+                                   </foreach>
+    </insert>
+    <update id="updateBlog_Tags"></update>
+
+
+</mapper>
+
+
