@@ -37,6 +37,8 @@ public interface BlogService {
 
     PageInfo<Blog> listBlogsByTypeId(Long TypeId,int start,int count);
 
+    PageInfo<Blog> listBlogsByTagId(Long TypeId,int start,int count);
+
     Map<String, List<Blog>> archiverBlog();
 
     List<Blog> findThreeBlogs();
