@@ -25,6 +25,8 @@ public interface TagService {
 
     void deleteTag(Long id);
 
+    List<Tag> findAllTag();
+
     List<Tag> findSomeTag(String ids);
 
     PageInfo<Tag> findAllTagsTop(int limit);
