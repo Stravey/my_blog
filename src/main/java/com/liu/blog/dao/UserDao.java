@@ -1,7 +1,7 @@
 package com.liu.blog.dao;
 
 import com.liu.blog.entity.User;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * User表接口
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * @version 1.0
  * @since 2025-06-23
  */
-@Repository
+@Mapper
 public interface UserDao {
 
     /**
