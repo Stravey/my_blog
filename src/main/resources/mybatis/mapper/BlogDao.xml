@@ -6,10 +6,10 @@
 
     <insert id="addOneBlog" useGeneratedKeys="true" keyProperty="id">
         insert into t_blog
-        values (null,#{title},#{content},#{fisrtPicture},
+        values (null,#{title},#{content},#{firstPicture},
                #{flag},#{views},#{appreciation},
                #{shareStatement},#{commentable},#{published},
-               #{recommend},#{createTime},#{updateTime},#{type.id},#{user.id}
+               #{recommend},#{createTime},#{updateTime},#{type.id},#{user.id},
                #{description})
     </insert>
 
